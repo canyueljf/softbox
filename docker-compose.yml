@@ -1,0 +1,30 @@
+# 应用坞 · 一键部署（下载 + 校验 + 铺目录）
+#
+# 用法：
+#   docker compose up                     # 下载三个包到 ./downloads 并校验
+#   docker compose run --rm softbox-installer sh /install.sh --verify-only
+#                                         # 只校验已有文件
+#   DOWNLOADS=/vol2/1000/其它/下载 docker compose up
+#                                         # 直接下到飞牛的下载目录
+#
+# 说明：应用坞是 fnOS 平台应用，最终安装必须在「应用中心 → 手动安装」完成，
+#       Docker 只负责把包下好、校验完、放到位。
+
+services:
+  softbox-installer:
+    image: alpine:3.20
+    container_name: softbox-installer
+    restart: "no"
+    working_dir: /work
+    environment:
+      # 三个包的下载源，默认指向本仓库的 Release
+      BASE_URL: ${BASE_URL:-https://github.com/canyueljf/softbox/releases/download/v1.0.0}
+      # --verify-only 时校验此目录里已有的包
+      WORK_DIR: /downloads
+      # 1 = 已存在且校验通过就跳过，0 = 强制重下
+      SKIP_EXISTING: ${SKIP_EXISTING:-1}
+    volumes:
+      - ${DOWNLOADS:-./downloads}:/downloads
+      - ./install.sh:/install.sh:ro
+      - ./SHA256SUMS.txt:/SHA256SUMS.txt:ro
+    command: ["sh", "/install.sh"]

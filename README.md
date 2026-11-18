@@ -4,6 +4,14 @@
 
 原生 FPK 应用，**不依赖 Docker**。不开应用的时候软件本体几乎不占内存。
 
+<img src="docs/images/hero.jpg" alt="应用坞：手机模式与电脑模式" width="100%" />
+
+<p align="center">
+  <img src="docs/images/formats.jpg" alt="多格式兼容运行" width="32%" />
+  <img src="docs/images/hdmi.jpg" alt="HDMI 直通电视" width="32%" />
+  <img src="docs/images/store-settings.jpg" alt="应用商店与设置" width="32%" />
+</p>
+
 模块化设计，拆成三件：
 
 | 包 | 格式 | 体积 | 管什么 |
