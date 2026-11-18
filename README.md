@@ -26,6 +26,22 @@
 
 ---
 
+## 下载
+
+三个包都在同一个网盘目录里：
+
+**百度网盘** <https://pan.baidu.com/s/1DpciuaHkdKUlyTSWSxk_hA?pwd=78mv>　提取码 `78mv`
+
+| 文件 | 体积 | 说明 |
+|---|---|---|
+| `应用坞-1.0.0.fpk` | 497 MB | 应用坞本体，先装它 |
+| `应用坞-安卓运行环境.ypk` | 980 MB | Waydroid，跑 `apk` 靠它 |
+| `应用坞-Win运行环境.ypk` | 280 MB | Wine，跑 `exe` 靠它 |
+
+下完建议先核对 SHA-256（见文末[校验和](#校验和)），确认文件没在传输里损坏。
+
+---
+
 ## 安装
 
 1. 「应用中心 → 手动安装」选 `应用坞-1.0.0.fpk`
@@ -98,23 +114,21 @@ sha256sum -c SHA256SUMS.txt
 
 ---
 
-## 一键部署（下载 + 校验）
+## 一键部署（校验 + 铺目录）
 
-不需要图形界面时：
+安装包放在网盘，不方便让脚本直接拉，所以这里的一键化只承担「校验 + 铺好目录」两件事：
 
 ```bash
 git clone https://github.com/canyueljf/softbox.git
 cd softbox
-docker compose up
-```
-
-它会把三个包下载到 `./downloads`、逐个校验 SHA-256，然后提示你去应用中心完成安装。只校验已有文件：
-
-```bash
+mkdir -p downloads
+# 把网盘里下的三个包放进 downloads/
 docker compose run --rm softbox-installer sh /install.sh --verify-only
 ```
 
-产物目录可改：`DOWNLOADS=/vol2/1000/其它/下载 docker compose up`
+三个文件的 SHA-256 会逐个核对，目录布局也会就绪；之后去应用中心完成安装。
+
+产物目录可改：把 `DOWNLOADS` 换成任意路径，例如 `DOWNLOADS=/vol2/1000/其它/下载 docker compose run --rm softbox-installer sh /install.sh --verify-only`
 
 > 应用坞本身是 fnOS 平台应用，容器里跑不起来（安卓环境依赖宿主内核 `binder_linux`）。Docker 在这里只承担安装器。
 

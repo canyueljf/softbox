@@ -9,6 +9,8 @@ set -eu
 
 WORK_DIR="${WORK_DIR:-/downloads}"
 BASE_URL="${BASE_URL:-https://github.com/canyueljf/softbox/releases/download/v1.0.0}"
+PAN_URL="${PAN_URL:-https://pan.baidu.com/s/1DpciuaHkdKUlyTSWSxk_hA?pwd=78mv}"
+PAN_CODE="${PAN_CODE:-78mv}"
 SUMS="${SUMS:-/SHA256SUMS.txt}"
 MODE="install"
 
@@ -88,7 +90,6 @@ while read -r sum name; do
   else
     curl -fL --progress-bar -o "$name.part" "$BASE_URL/$name" || { bad "下载失败：$name"; rm -f "$name.part"; FAIL=1; continue; }
   fi
-
   mv "$name.part" "$name"
   if verify_one "$name" "$sum"; then
     :
@@ -99,7 +100,9 @@ done < "$SUMS"
 
 echo
 if [ "$FAIL" != "0" ]; then
-  bad "有文件下载失败或校验不通过，请重跑：docker compose up"
+  bad "有文件下载失败或校验不通过。"
+  say "安装包在百度网盘：$PAN_URL  提取码 $PAN_CODE"
+  say "下载后放进 $WORK_DIR，再执行 sh install.sh --verify-only 校验。"
   exit 1
 fi
 
